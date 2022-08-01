@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 
 <head>
     <meta charset="ISO-8859-1">
@@ -12,10 +12,14 @@
 <body>
     <div class="container text-center">
         <div>
+            <p>
+                <span sec:authentication="name">Username</span> is Logged In. They have these roles: <span sec:authentication="principal.authorities">Roles</span>.
+            </p>
             <form th:action="@{/logout}" method="post">
                 <p>
                     Welcome <b>[[${#request.userPrincipal.principal.fullName}]]</b>
                 </p>
+                
                 <input type="submit" value="Sign Out" />
             </form>
         </div>

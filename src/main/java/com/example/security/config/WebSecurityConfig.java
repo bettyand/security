@@ -18,9 +18,6 @@ import com.example.security.service.CustomUserDetailsService;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    @Autowired
-    private DataSource dataSource;
-
     @Bean
     public UserDetailsService userDetailsService() {
         return new CustomUserDetailsService();
@@ -48,13 +45,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
             .antMatchers("/users").authenticated()
-            .anyRequest().permitAll()
+            .antMatchers("/users/**").hasAuthority("Admin")         
+            .antMatchers("/webjars/**").permitAll()
+            .antMatchers("/register").permitAll()
+            .antMatchers("/process_register").permitAll()
+            .anyRequest().authenticated()
             .and()
             .formLogin()
                 .usernameParameter("email")
-                .defaultSuccessUrl("/users")
+                .defaultSuccessUrl("/")
                 .permitAll()
             .and()
-            .logout().logoutSuccessUrl("/").permitAll();
+            .logout().logoutSuccessUrl("/").permitAll()
+            .and()
+            .exceptionHandling().accessDeniedPage("/403");
     }
 }
