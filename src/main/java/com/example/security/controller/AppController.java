@@ -41,6 +41,11 @@ public class AppController {
         return "register_success";
     }
 
+    @GetMapping("/login")
+    public String viewLoginPage() {
+        return "login";
+    }
+
     @GetMapping("/users")
     public String listUsers(Model model) {
         List<User> listUsers = userService.listAll();
@@ -63,8 +68,4 @@ public class AppController {
         return "redirect:/users";
     }
 
-    // @GetMapping("/admin_home")
-    // public String viewAdminHome() {
-    //     return "admin_home";
-    // }
 }
