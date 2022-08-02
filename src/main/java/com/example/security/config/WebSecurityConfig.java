@@ -59,6 +59,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .successHandler(loginSuccessHandler)
                 .permitAll()
             .and()
+            .rememberMe()
+            .and()
             .logout().logoutSuccessUrl("/").permitAll()
             .and()
             .exceptionHandling().accessDeniedPage("/403");
