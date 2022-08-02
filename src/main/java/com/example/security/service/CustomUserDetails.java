@@ -32,6 +32,10 @@ public class CustomUserDetails implements UserDetails{
         return authorities;
     }
 
+    public boolean hasRole(String roleName) {
+        return this.user.hasRole(roleName);
+    }
+
     @Override
     public String getPassword() {
         return user.getPassword();

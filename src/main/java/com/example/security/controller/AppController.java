@@ -62,4 +62,9 @@ public class AppController {
         userService.save(user);
         return "redirect:/users";
     }
+
+    // @GetMapping("/admin_home")
+    // public String viewAdminHome() {
+    //     return "admin_home";
+    // }
 }

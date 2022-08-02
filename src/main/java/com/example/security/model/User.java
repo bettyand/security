@@ -1,8 +1,6 @@
 package com.example.security.model;
 
-import java.util.HashSet;
-import java.util.Set;
-
+import java.util.*;
 import javax.persistence.*;
 
 @Entity
@@ -35,13 +33,7 @@ public class User {
     )
     private Set<Role> roles = new HashSet<>();
 
-    public boolean isEnabled() {
-        return enabled;
-    }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
 
     public Long getId() {
         return id;
@@ -83,6 +75,14 @@ public class User {
         this.lastName = lastName;
     }
 
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
     public Set<Role> getRoles() {
         return roles;
     }
@@ -94,4 +94,16 @@ public class User {
     public void addRole(Role role) {
         this.roles.add(role);
     }
+
+    public boolean hasRole(String roleName) {
+        Iterator<Role> iterator = this.roles.iterator();
+        while (iterator.hasNext()) {
+            Role role = iterator.next();
+            if (role.getName().equals(roleName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
 }
