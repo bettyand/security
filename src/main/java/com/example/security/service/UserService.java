@@ -32,6 +32,8 @@ public class UserService {
     public void registerDefaultUser(User user) {
         Role roleUser = roleRepo.findByName("User");
         user.addRole(roleUser);
+        user.setAccountNonLocked(true);
+        user.setEnabled(true);
         encodePassword(user);
         userRepo.save(user);
     }

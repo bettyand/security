@@ -28,9 +28,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-    @Autowired
-    private LoginSuccessHandler loginSuccessHandler;
-
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -38,6 +35,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
+
+    @Autowired
+    private LoginSuccessHandler loginSuccessHandler;
+
+    @Autowired
+    private LoginFailureHandler loginFailureHandler;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -47,22 +50,29 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-            .antMatchers("/users").authenticated()
-            .antMatchers("/users/**").hasAuthority("Admin")         
-            .antMatchers("/webjars/**").permitAll()
-            .antMatchers("/register").permitAll()
-            .antMatchers("/process_register").permitAll()
+            .antMatchers("/users").hasAnyAuthority("Admin", "Coach")
+            .antMatchers("/admin_home", "/users/**").hasAuthority("Admin")
+            .antMatchers("/coach_home").hasAuthority("Coach") 
+            .antMatchers("/user_home").hasAuthority("User")        
+            .antMatchers(
+                "/",
+                "/register", 
+                "/process_register", 
+                "/login", 
+                "/webjars/**"
+                ).permitAll()
             .anyRequest().authenticated()
             .and()
             .formLogin()
             .loginPage("/login")
                 .usernameParameter("email")
+                .failureHandler(loginFailureHandler)
                 .successHandler(loginSuccessHandler)
                 .permitAll()
             .and()
             .rememberMe()
             .and()
-            .logout().logoutSuccessUrl("/").permitAll()
+            .logout().logoutSuccessUrl("/login?logout").permitAll()
             .and()
             .exceptionHandling().accessDeniedPage("/403");
     }
